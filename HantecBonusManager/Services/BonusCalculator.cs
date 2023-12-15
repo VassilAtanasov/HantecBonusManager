@@ -5,11 +5,9 @@ namespace HantecBonusManager.Services
 {
     public class BonusCalculator : IBonusCalculator
     {
-        public BonusPoint CalculateBonus(Deal deal)
+        public async Task<BonusPoint> CalculateBonus(Deal deal)
         {
             throw new NotImplementedException();
-
-            return new BonusPoint();
         }
     }
 }

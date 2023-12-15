@@ -4,6 +4,6 @@ namespace HantecBonusManager.Services
 {
     public interface IBonusCalculator
     {
-        BonusPoint CalculateBonus(Deal deal);
+        Task<BonusPoint> CalculateBonus(Deal deal);
     }
 }

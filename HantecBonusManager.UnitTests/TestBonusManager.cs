@@ -1,20 +1,38 @@
 using FluentAssertions;
 using HantecBonusManager.Models;
+using HantecBonusManager.Services;
+using Moq;
 
 namespace HantecBonusManager.UnitTests
 {
     public class TestBonusManager
     {
         [Fact]
-        public void Call_OnSuccess_ReturnListOfProcessResults()
+        public async Task ProcessBonusForAccounts_OnSuccess_ReturnNotNull()
         {
             // Arrange
-            var sut = new BonusManager();
+            var mockTradingPlatformApi = new Mock<ITradingPlatformApi>();
+            var mockBonusCalculator = new Mock<IBonusCalculator>();
+
+            var sut = new BonusManager(mockTradingPlatformApi.Object, mockBonusCalculator.Object);
             // Act
-            var result = sut.ProcessBonusForAccounts();
+            var result = await sut.ProcessBonusForAccounts();
             // Assert
             result.Should().NotBeNull();
-            result.Should().BeOfType<Task<List<ProcessResults>>>();
+        }
+
+        [Fact]
+        public async Task ProcessBonusForAccounts_OnEmptyAccountList_ReturnListOfProcessResults()
+        {
+            // Arrange
+            var mockTradingPlatformApi = new Mock<ITradingPlatformApi>();
+            var mockBonusCalculator = new Mock<IBonusCalculator>();
+
+            var sut = new BonusManager(mockTradingPlatformApi.Object, mockBonusCalculator.Object);
+            // Act
+            var result = await sut.ProcessBonusForAccounts();
+            // Assert
+            result.Should().BeOfType<List<ProcessResults>>();
         }
     }
 }

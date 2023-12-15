@@ -2,7 +2,7 @@
 {
     public class BonusPoint
     {
-        public long BonusPointId { get; set; }
+        public long Id { get; set; }
         public decimal Amount { get; set; }
     }
 }

@@ -2,6 +2,6 @@
 {
     public class Account
     {
-        public long AccountId { get; set; }
+        public long Id { get; internal set; }
     }
 }
