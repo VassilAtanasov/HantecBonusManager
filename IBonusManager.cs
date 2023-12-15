@@ -4,7 +4,7 @@ namespace HantecBonusManager
 {
     public interface IBonusManager
     {
-        List<ProcessResults> ProcessBonusForAccounts();
+        public Task<List<ProcessResults>> ProcessBonusForAccounts();
         
     }
 }

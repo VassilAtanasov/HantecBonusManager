@@ -1,12 +1,13 @@
 ﻿using HantecBonusManager.Models;
+using HantecBonusManager.Services;
 
 namespace HantecBonusManager
 {
-    public class BonusManager : IBonusManager
+    public class BonusManager() : IBonusManager
     {
-        List<ProcessResults> IBonusManager.ProcessBonusForAccounts()
+        public async Task<List<ProcessResults>> ProcessBonusForAccounts()
         {
-            throw new NotImplementedException();
+            return new List<ProcessResults>();
         }
     }
 }

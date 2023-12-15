@@ -11,4 +11,9 @@
 
  The first commit implements the .Net projects with the provided interfaces and models.
  Then I will start using the TDD and write unit tests for the main class.
- 
+  ProcessBonusForAccounts test
+  ProcessBonusForAccounts implementation
+  CalculateTotalBonus test
+  CalculateTotalBonus implementation
+  Refactor using Strategy Design Pattern
+  Logging test and implementation
