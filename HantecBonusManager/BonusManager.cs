@@ -8,7 +8,7 @@ namespace HantecBonusManager
         public async Task<List<ProcessResults>> ProcessBonusForAccounts()
         {
             var results = new List<ProcessResults>();
-            var accounts = await tradingPlatformApi.GetAccountsList();
+            var accounts = await tradingPlatformApi.GetAccountsList() ?? [];
             foreach (var account in accounts)
             {
                 if (account is not null)
@@ -28,7 +28,7 @@ namespace HantecBonusManager
         {
             decimal totalBonus = 0;
 
-            foreach (var deal in deals)
+            foreach (var deal in deals ?? [])
             {
                 BonusPoint bonus = await bonusCalculator.CalculateBonus(deal);
                 totalBonus += bonus.Amount;
