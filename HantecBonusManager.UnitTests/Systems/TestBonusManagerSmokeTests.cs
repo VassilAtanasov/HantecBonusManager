@@ -2,11 +2,10 @@ using FluentAssertions;
 using HantecBonusManager.Models;
 using HantecBonusManager.Services;
 using Moq;
-using Moq.Protected;
 
 namespace HantecBonusManager.UnitTests
 {
-    public class TestBonusManager
+    public class TestBonusManagerSmokeTests
     {
         [Fact]
         public async Task ProcessBonusForAccounts_OnSuccess_ReturnNotNull()
