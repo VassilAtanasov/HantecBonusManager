@@ -2,6 +2,7 @@ using FluentAssertions;
 using HantecBonusManager.Models;
 using HantecBonusManager.Services;
 using Moq;
+using Moq.Protected;
 
 namespace HantecBonusManager.UnitTests
 {
@@ -22,7 +23,7 @@ namespace HantecBonusManager.UnitTests
         }
 
         [Fact]
-        public async Task ProcessBonusForAccounts_OnEmptyAccountList_ReturnListOfProcessResults()
+        public async Task ProcessBonusForAccounts_OnEmptyAccountList_ReturnEmptyListOfProcessResults()
         {
             // Arrange
             var mockTradingPlatformApi = new Mock<ITradingPlatformApi>();

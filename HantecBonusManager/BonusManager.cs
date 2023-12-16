@@ -8,7 +8,7 @@ namespace HantecBonusManager
         public async Task<List<ProcessResults>> ProcessBonusForAccounts()
         {
             var results = new List<ProcessResults>();
-            var accounts = await tradingPlatformApi.GetAccountsList() ?? new List<Account>();
+            var accounts = await tradingPlatformApi.GetAccountsList();
             foreach (var account in accounts)
             {
                 if (account is not null)

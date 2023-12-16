@@ -2,7 +2,7 @@
 {
     public class ProcessResults
     {
-        public long AccountId;
-        public decimal Amount;
+        public long AccountId { get; set; }
+        public decimal Amount { get; set; }
     }
 }
