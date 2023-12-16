@@ -3,7 +3,6 @@ using HantecBonusManager.Models;
 using HantecBonusManager.Services;
 using HantecBonusManager.UnitTests.Fixtures;
 using Moq;
-using Moq.Protected;
 
 namespace HantecBonusManager.UnitTests.Systems
 {
@@ -28,7 +27,7 @@ namespace HantecBonusManager.UnitTests.Systems
             var mockBonusCalculator = new Mock<IBonusCalculator>();
             mockBonusCalculator
                 .Setup(m => m.CalculateBonus(It.IsAny<Deal>()))
-                .ReturnsAsync(new BonusPoint() { Amount = 1 });
+                .Returns(new BonusPoint() { Amount = 1 });
 
             var sut = new BonusManager(mockTradingPlatformApi.Object, mockBonusCalculator.Object);
 

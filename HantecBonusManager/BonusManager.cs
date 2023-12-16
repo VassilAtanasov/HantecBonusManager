@@ -14,7 +14,7 @@ namespace HantecBonusManager
                 if (account is not null)
                 {
                     List<Deal> deals = await tradingPlatformApi.GetHistoricalDeals(account.Id, DateTime.Now.AddMonths(-1), DateTime.Now);
-                    decimal totalBonus = await CalculateTotalBonus(deals);
+                    decimal totalBonus = CalculateTotalBonus(deals);
 
                     await tradingPlatformApi.CreateCreditOperation(account.Id, totalBonus);
                     results.Add(new ProcessResults() { AccountId = account.Id, Amount = totalBonus });
@@ -24,13 +24,13 @@ namespace HantecBonusManager
             return results;
         }
 
-        private async Task<decimal> CalculateTotalBonus(List<Deal> deals)
+        private decimal CalculateTotalBonus(List<Deal> deals)
         {
             decimal totalBonus = 0;
 
             foreach (var deal in deals ?? [])
             {
-                BonusPoint bonus = await bonusCalculator.CalculateBonus(deal);
+                BonusPoint bonus = bonusCalculator.CalculateBonus(deal);
                 totalBonus += bonus.Amount;
             }
 
