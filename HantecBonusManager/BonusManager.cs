@@ -1,5 +1,6 @@
 ﻿using HantecBonusManager.Models;
 using HantecBonusManager.Services;
+using System.Diagnostics;
 
 namespace HantecBonusManager
 {
@@ -15,9 +16,14 @@ namespace HantecBonusManager
                 {
                     List<Deal> deals = await tradingPlatformApi.GetHistoricalDeals(account.Id, DateTime.Now.AddMonths(-1), DateTime.Now);
                     decimal totalBonus = CalculateTotalBonus(deals);
-
-                    await tradingPlatformApi.CreateCreditOperation(account.Id, totalBonus);
-                    results.Add(new ProcessResults() { AccountId = account.Id, Amount = totalBonus });
+                    try
+                    {
+                        await tradingPlatformApi.CreateCreditOperation(account.Id, totalBonus);
+                        results.Add(new ProcessResults() { AccountId = account.Id, Amount = totalBonus });
+                    }
+                    catch (Exception e){
+                        Debug.Print(e.Message);
+                    }
                 }
             }
 

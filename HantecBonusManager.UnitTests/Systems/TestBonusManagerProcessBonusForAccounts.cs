@@ -41,6 +41,7 @@ namespace HantecBonusManager.UnitTests.Systems
                 Times.Exactly(2));
             mockBonusCalculator.Verify(m => m.CalculateBonus(It.IsAny<Deal>()), Times.Exactly(4));
             mockTradingPlatformApi.Verify(m => m.CreateCreditOperation(It.IsAny<long>(), It.IsAny<decimal>()), Times.Exactly(2));
+            Assert.Equal(2, result.Count);
         }
         [Fact]
         public async Task ProcessBonusForAccounts_OnCreateCreditOperationException_ReturnPartialListOfProcessResults()
@@ -76,6 +77,7 @@ namespace HantecBonusManager.UnitTests.Systems
                 Times.Exactly(2));
             mockBonusCalculator.Verify(m => m.CalculateBonus(It.IsAny<Deal>()), Times.Exactly(4));
             mockTradingPlatformApi.Verify(m => m.CreateCreditOperation(It.IsAny<long>(), It.IsAny<decimal>()), Times.Exactly(2));
+            Assert.Empty(result);
         }
     }
 }
