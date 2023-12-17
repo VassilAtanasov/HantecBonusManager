@@ -12,9 +12,9 @@ namespace HantecBonusManager.UnitTests
         {
             // Arrange
             var mockTradingPlatformApi = new Mock<ITradingPlatformApi>();
-            var mockBonusCalculator = new Mock<IBonusCalculator>();
+            var simpleBonusCalculationStrategy = new Mock<SimpleBonusCalculationStrategy>();
 
-            var sut = new BonusManager(mockTradingPlatformApi.Object, mockBonusCalculator.Object);
+            var sut = new BonusManager(mockTradingPlatformApi.Object, simpleBonusCalculationStrategy.Object);
             // Act
             var result = await sut.ProcessBonusForAccounts();
             // Assert
@@ -26,9 +26,9 @@ namespace HantecBonusManager.UnitTests
         {
             // Arrange
             var mockTradingPlatformApi = new Mock<ITradingPlatformApi>();
-            var mockBonusCalculator = new Mock<IBonusCalculator>();
+            var simpleBonusCalculationStrategy = new Mock<SimpleBonusCalculationStrategy>();
 
-            var sut = new BonusManager(mockTradingPlatformApi.Object, mockBonusCalculator.Object);
+            var sut = new BonusManager(mockTradingPlatformApi.Object, simpleBonusCalculationStrategy.Object);
             // Act
             var result = await sut.ProcessBonusForAccounts();
             // Assert

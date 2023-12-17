@@ -4,21 +4,30 @@ using System.Diagnostics;
 
 namespace HantecBonusManager
 {
-    public class BonusManager(ITradingPlatformApi tradingPlatformApi, IBonusCalculator bonusCalculator) : IBonusManager
+    public class BonusManager: IBonusManager
     {
+        private readonly ITradingPlatformApi _tradingPlatformApi;
+        private readonly BonusCalculator _bonusCalculator;
+
+        public BonusManager(ITradingPlatformApi tradingPlatformApi, IBonusCalculationStrategy bonusCalculationStrategy)
+        {
+            _tradingPlatformApi = tradingPlatformApi;
+            _bonusCalculator = new BonusCalculator(bonusCalculationStrategy);
+        }
+
         public async Task<List<ProcessResults>> ProcessBonusForAccounts()
         {
             var results = new List<ProcessResults>();
-            var accounts = await tradingPlatformApi.GetAccountsList() ?? [];
+            var accounts = await _tradingPlatformApi.GetAccountsList() ?? [];
             foreach (var account in accounts)
             {
                 if (account is not null)
                 {
-                    List<Deal> deals = await tradingPlatformApi.GetHistoricalDeals(account.Id, DateTime.Now.AddMonths(-1), DateTime.Now);
+                    List<Deal> deals = await _tradingPlatformApi.GetHistoricalDeals(account.Id, DateTime.Now.AddMonths(-1), DateTime.Now);
                     decimal totalBonus = CalculateTotalBonus(deals);
                     try
                     {
-                        await tradingPlatformApi.CreateCreditOperation(account.Id, totalBonus);
+                        await _tradingPlatformApi.CreateCreditOperation(account.Id, totalBonus);
                         results.Add(new ProcessResults() { AccountId = account.Id, Amount = totalBonus });
                     }
                     catch (Exception e){
@@ -36,7 +45,7 @@ namespace HantecBonusManager
 
             foreach (var deal in deals ?? [])
             {
-                BonusPoint bonus = bonusCalculator.CalculateBonus(deal);
+                BonusPoint bonus = _bonusCalculator.CalculateBonus(deal);
                 totalBonus += bonus.Amount;
             }
 

@@ -1,5 +1,6 @@
 ﻿using HantecBonusManager.Models;
 using HantecBonusManager.Services;
+using Moq;
 
 namespace HantecBonusManager.UnitTests.Systems
 {
@@ -9,15 +10,20 @@ namespace HantecBonusManager.UnitTests.Systems
         public void CalculateBonus_ShouldReturnCorrectBonus()
         {
             // Arrange
-            var bonusCalculator = new BonusCalculator();
-            var deal = new Deal { Id = 1 };
+            var mockSimpleBonusCalculationStrategy = new Mock<IBonusCalculationStrategy>();
+            var bonusCalculator = new BonusCalculator(mockSimpleBonusCalculationStrategy.Object);
+
+            var deal = new Deal { Id = 1, DealCount=5 };
+            var expectedBonusPoint = new BonusPoint { Amount = 2.5m }; // Assuming a simple calculation logic: 5 deals * 0.5 bonus points per deal
+
+            mockSimpleBonusCalculationStrategy.Setup(strategy => strategy.CalculateBonus(deal)).Returns(expectedBonusPoint);
 
             // Act
             var result = bonusCalculator.CalculateBonus(deal);
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(0.5m, result.Amount);
+            Assert.Equal(expectedBonusPoint, result);
         }
     }
 }

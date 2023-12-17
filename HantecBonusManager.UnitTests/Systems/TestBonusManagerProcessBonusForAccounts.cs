@@ -24,12 +24,13 @@ namespace HantecBonusManager.UnitTests.Systems
             mockTradingPlatformApi.
                 Setup(m => m.CreateCreditOperation(It.IsAny<long>(), It.IsAny<decimal>()));
 
-            var mockBonusCalculator = new Mock<IBonusCalculator>();
-            mockBonusCalculator
+            var simpleBonusCalculationStrategy = new Mock<IBonusCalculationStrategy>();
+            simpleBonusCalculationStrategy
                 .Setup(m => m.CalculateBonus(It.IsAny<Deal>()))
-                .Returns(new BonusPoint() { Amount = 1 });
+                .Returns(new BonusPoint() {  Amount = 1 });
 
-            var sut = new BonusManager(mockTradingPlatformApi.Object, mockBonusCalculator.Object);
+
+            var sut = new BonusManager(mockTradingPlatformApi.Object, simpleBonusCalculationStrategy.Object);
 
             // Act
             var result = await sut.ProcessBonusForAccounts();
@@ -39,7 +40,7 @@ namespace HantecBonusManager.UnitTests.Systems
             mockTradingPlatformApi.Verify(m => m.GetAccountsList(), Times.Once);
             mockTradingPlatformApi.Verify(m => m.GetHistoricalDeals(It.IsAny<long>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()),
                 Times.Exactly(2));
-            mockBonusCalculator.Verify(m => m.CalculateBonus(It.IsAny<Deal>()), Times.Exactly(4));
+            simpleBonusCalculationStrategy.Verify(m => m.CalculateBonus(It.IsAny<Deal>()), Times.Exactly(4));
             mockTradingPlatformApi.Verify(m => m.CreateCreditOperation(It.IsAny<long>(), It.IsAny<decimal>()), Times.Exactly(2));
             Assert.Equal(2, result.Count);
         }
@@ -60,12 +61,13 @@ namespace HantecBonusManager.UnitTests.Systems
                 Setup(m => m.CreateCreditOperation(It.IsAny<long>(), It.IsAny<decimal>()))
                 .Throws(new ArgumentException());
 
-            var mockBonusCalculator = new Mock<IBonusCalculator>();
-            mockBonusCalculator
+            var simpleBonusCalculationStrategy = new Mock<IBonusCalculationStrategy>();
+            simpleBonusCalculationStrategy
                 .Setup(m => m.CalculateBonus(It.IsAny<Deal>()))
                 .Returns(new BonusPoint() { Amount = 1 });
 
-            var sut = new BonusManager(mockTradingPlatformApi.Object, mockBonusCalculator.Object);
+
+            var sut = new BonusManager(mockTradingPlatformApi.Object, simpleBonusCalculationStrategy.Object);
 
             // Act
             var result = await sut.ProcessBonusForAccounts();
@@ -75,7 +77,7 @@ namespace HantecBonusManager.UnitTests.Systems
             mockTradingPlatformApi.Verify(m => m.GetAccountsList(), Times.Once);
             mockTradingPlatformApi.Verify(m => m.GetHistoricalDeals(It.IsAny<long>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()),
                 Times.Exactly(2));
-            mockBonusCalculator.Verify(m => m.CalculateBonus(It.IsAny<Deal>()), Times.Exactly(4));
+            simpleBonusCalculationStrategy.Verify(m => m.CalculateBonus(It.IsAny<Deal>()), Times.Exactly(4));
             mockTradingPlatformApi.Verify(m => m.CreateCreditOperation(It.IsAny<long>(), It.IsAny<decimal>()), Times.Exactly(2));
             Assert.Empty(result);
         }
