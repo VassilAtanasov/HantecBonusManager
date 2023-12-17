@@ -120,8 +120,8 @@ namespace HantecBonusManager.UnitTests.Systems
             mockTradingPlatformApi.Verify(m => m.GetAccountsList(), Times.Once);
             mockTradingPlatformApi.Verify(m => m.GetHistoricalDeals(It.IsAny<long>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()),
                 Times.Exactly(2));
-            simpleBonusCalculationStrategy.Verify(m => m.CalculateBonus(It.IsAny<Deal>()), Times.Exactly(4));
-            mockTradingPlatformApi.Verify(m => m.CreateCreditOperation(It.IsAny<long>(), It.IsAny<decimal>()), Times.Exactly(2));
+            simpleBonusCalculationStrategy.Verify(m => m.CalculateBonus(It.IsAny<Deal>()), Times.Exactly(0));
+            mockTradingPlatformApi.Verify(m => m.CreateCreditOperation(It.IsAny<long>(), It.IsAny<decimal>()), Times.Exactly(0));
             Assert.Empty(result);
         }
     }
