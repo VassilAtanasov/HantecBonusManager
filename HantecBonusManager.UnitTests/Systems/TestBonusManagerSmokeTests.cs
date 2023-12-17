@@ -1,6 +1,7 @@
 using FluentAssertions;
 using HantecBonusManager.Models;
 using HantecBonusManager.Services;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace HantecBonusManager.UnitTests
@@ -14,7 +15,9 @@ namespace HantecBonusManager.UnitTests
             var mockTradingPlatformApi = new Mock<ITradingPlatformApi>();
             var simpleBonusCalculationStrategy = new Mock<SimpleBonusCalculationStrategy>();
 
-            var sut = new BonusManager(mockTradingPlatformApi.Object, simpleBonusCalculationStrategy.Object);
+            var mockLogger = new Mock<ILogger<BonusManager>>();
+
+            var sut = new BonusManager(mockTradingPlatformApi.Object, simpleBonusCalculationStrategy.Object, mockLogger.Object);
             // Act
             var result = await sut.ProcessBonusForAccounts();
             // Assert
@@ -28,7 +31,9 @@ namespace HantecBonusManager.UnitTests
             var mockTradingPlatformApi = new Mock<ITradingPlatformApi>();
             var simpleBonusCalculationStrategy = new Mock<SimpleBonusCalculationStrategy>();
 
-            var sut = new BonusManager(mockTradingPlatformApi.Object, simpleBonusCalculationStrategy.Object);
+            var mockLogger = new Mock<ILogger<BonusManager>>();
+
+            var sut = new BonusManager(mockTradingPlatformApi.Object, simpleBonusCalculationStrategy.Object, mockLogger.Object);
             // Act
             var result = await sut.ProcessBonusForAccounts();
             // Assert

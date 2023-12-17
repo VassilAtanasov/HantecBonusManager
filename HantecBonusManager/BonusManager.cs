@@ -1,18 +1,21 @@
 ﻿using HantecBonusManager.Models;
 using HantecBonusManager.Services;
 using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 namespace HantecBonusManager
 {
-    public class BonusManager: IBonusManager
+    public class BonusManager : IBonusManager
     {
         private readonly ITradingPlatformApi _tradingPlatformApi;
         private readonly BonusCalculator _bonusCalculator;
+        private readonly ILogger<BonusManager> _logger;
 
-        public BonusManager(ITradingPlatformApi tradingPlatformApi, IBonusCalculationStrategy bonusCalculationStrategy)
+        public BonusManager(ITradingPlatformApi tradingPlatformApi, IBonusCalculationStrategy bonusCalculationStrategy, ILogger<BonusManager> logger)
         {
-            _tradingPlatformApi = tradingPlatformApi;
-            _bonusCalculator = new BonusCalculator(bonusCalculationStrategy);
+            _tradingPlatformApi = tradingPlatformApi ?? throw new ArgumentNullException(nameof(tradingPlatformApi));
+            _bonusCalculator = new BonusCalculator(bonusCalculationStrategy ?? throw new ArgumentNullException(nameof(bonusCalculationStrategy)));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task<List<ProcessResults>> ProcessBonusForAccounts()
@@ -23,15 +26,19 @@ namespace HantecBonusManager
             {
                 if (account is not null)
                 {
-                    List<Deal> deals = await _tradingPlatformApi.GetHistoricalDeals(account.Id, DateTime.Now.AddMonths(-1), DateTime.Now);
-                    decimal totalBonus = CalculateTotalBonus(deals);
                     try
                     {
+                        List<Deal> deals = await _tradingPlatformApi.GetHistoricalDeals(account.Id, DateTime.Now.AddMonths(-1), DateTime.Now);
+
+                        decimal totalBonus = CalculateTotalBonus(deals);
+
                         await _tradingPlatformApi.CreateCreditOperation(account.Id, totalBonus);
                         results.Add(new ProcessResults() { AccountId = account.Id, Amount = totalBonus });
+                        LogSuccess(account.Id, totalBonus);
                     }
-                    catch (Exception e){
-                        Debug.Print(e.Message);
+                    catch (Exception ex)
+                    {
+                        LogError(account.Id, ex.Message);
                     }
                 }
             }
@@ -50,6 +57,17 @@ namespace HantecBonusManager
             }
 
             return totalBonus;
+        }
+
+
+        private void LogSuccess(long accountId, decimal totalBonus)
+        {
+            _logger.LogInformation($"Successfully credited bonus to account {accountId}. Total Bonus: {totalBonus}");
+        }
+
+        private void LogError(long accountId, string errorMessage)
+        {
+            _logger.LogError($"Error crediting bonus to account {accountId}. Error: {errorMessage}");
         }
     }
 }
