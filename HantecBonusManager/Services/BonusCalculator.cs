@@ -5,27 +5,17 @@ namespace HantecBonusManager.Services
 {
     public class BonusCalculator : IBonusCalculator
     {
-        // The bonus points per deal
-        private const decimal PointsPerDeal = 0.5m;
+        private readonly IBonusCalculationStrategy _bonusCalculationStrategy;
+
+        public BonusCalculator(IBonusCalculationStrategy bonusCalculationStrategy)
+        {
+            _bonusCalculationStrategy = bonusCalculationStrategy;
+        }
 
         public BonusPoint CalculateBonus(Deal deal)
         {
-            if (deal == null)
-            {
-                throw new ArgumentNullException(nameof(deal));
-            }
-
-            // Simple bonus calculation: points per deal
-            decimal bonusAmount = 1 * PointsPerDeal;
-
-            // Create a BonusPoint object
-            var bonusPoint = new BonusPoint
-            {
-                Id = Guid.NewGuid().ToString(), // Generate a unique identifier
-                Amount = bonusAmount
-            };
-
-            return bonusPoint;
+            return _bonusCalculationStrategy.CalculateBonus(deal);
         }
     }
+
 }
