@@ -36,4 +36,39 @@ public class DealRepositoryTests
             Assert.Equal(1, result[0].AccountId);
         }
     }
+
+    [Fact]
+    public void AddDeals_ShouldAddDealsToDatabase()
+    {
+        // Arrange
+        var options = new DbContextOptionsBuilder<DealsDbContext>()
+            .UseInMemoryDatabase(databaseName: "TestDatabase")
+            .Options;
+
+        using (var context = new DealsDbContext(options))
+        {
+            var dealRepository = new DealRepository(context);
+
+            var dealsToAdd = new List<Deal>
+            {
+                new Deal { AccountId = 1, Date = DateTime.Now, Amount = 100.0m },
+                new Deal { AccountId = 2, Date = DateTime.Now, Amount = 150.0m },
+                // Add more deals as needed
+            };
+
+            // Act
+            dealRepository.AddDeals(dealsToAdd);
+
+            // Assert
+            Assert.Equal(dealsToAdd.Count, context.Deals.Count());
+
+            foreach (var deal in dealsToAdd)
+            {
+                var addedDeal = context.Deals.Find(deal.Id);
+                Assert.NotNull(addedDeal);
+                Assert.Equal(deal.AccountId, addedDeal.AccountId);
+            }
+        }
+    }
+
 }
