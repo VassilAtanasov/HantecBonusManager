@@ -13,7 +13,7 @@ namespace HantecBonusManager.UnitTests.Systems
             var mockSimpleBonusCalculationStrategy = new Mock<IBonusCalculationStrategy>();
             var bonusCalculator = new BonusCalculator(mockSimpleBonusCalculationStrategy.Object);
 
-            var deal = new Deal { Id = 1, DealCount=5 };
+            var deal = new Deal { AccountId = 1, DealCount=5 };
             var expectedBonusPoint = new BonusPoint { Amount = 2.5m }; // Assuming a simple calculation logic: 5 deals * 0.5 bonus points per deal
 
             mockSimpleBonusCalculationStrategy.Setup(strategy => strategy.CalculateBonus(deal)).Returns(expectedBonusPoint);

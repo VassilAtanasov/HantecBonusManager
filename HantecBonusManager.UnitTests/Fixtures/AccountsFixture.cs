@@ -10,8 +10,8 @@ namespace HantecBonusManager.UnitTests.Fixtures
         ];
 
         public static List<Deal> HistoricDeals => [
-            new Deal { Id = 1 },
-            new Deal { Id = 2 },    
+            new Deal { AccountId = 1 },
+            new Deal { AccountId = 2 },    
         ];
     }
 }

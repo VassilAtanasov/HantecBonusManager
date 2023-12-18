@@ -6,7 +6,7 @@ using Moq;
 
 namespace HantecBonusManager.UnitTests
 {
-    public class TestBonusManagerSmokeTests
+    public class BonusManagerSmokeTests
     {
         [Fact]
         public async Task ProcessBonusForAccounts_OnSuccess_ReturnNotNull()

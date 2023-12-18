@@ -7,7 +7,7 @@ using Moq;
 
 namespace HantecBonusManager.UnitTests.Systems
 {
-    public class TestBonusManagerProcessBonusForAccounts
+    public class BonusManagerProcessBonusForAccountsTest
     {
         [Fact]
         public async Task ProcessBonusForAccounts_OnAccountList_ReturnListOfProcessResults()
