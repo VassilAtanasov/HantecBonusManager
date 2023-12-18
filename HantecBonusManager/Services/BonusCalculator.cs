@@ -3,14 +3,9 @@
 
 namespace HantecBonusManager.Services
 {
-    public class BonusCalculator : IBonusCalculator
+    public class BonusCalculator(IBonusCalculationStrategy bonusCalculationStrategy) : IBonusCalculator
     {
-        private readonly IBonusCalculationStrategy _bonusCalculationStrategy;
-
-        public BonusCalculator(IBonusCalculationStrategy bonusCalculationStrategy)
-        {
-            _bonusCalculationStrategy = bonusCalculationStrategy;
-        }
+        private readonly IBonusCalculationStrategy _bonusCalculationStrategy = bonusCalculationStrategy;
 
         public BonusPoint CalculateBonus(Deal deal)
         {

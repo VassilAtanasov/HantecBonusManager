@@ -8,14 +8,9 @@ namespace HantecBonusManager.Data
         void AddDeals(List<Deal> deals); // New method for adding a list of deals
     }
 
-    public class DealRepository : IDealRepository
+    public class DealRepository(DealsDbContext dbContext) : IDealRepository
     {
-        private readonly DealsDbContext _dbContext;
-
-        public DealRepository(DealsDbContext dbContext)
-        {
-            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-        }
+        private readonly DealsDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
 
         public List<Deal> GetHistoricalDeals(long accountId, DateTime fromDate, DateTime toDate)
         {

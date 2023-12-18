@@ -3,12 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HantecBonusManager.Data
 {
-    public class DealsDbContext : DbContext
+    public class DealsDbContext(DbContextOptions<DealsDbContext> options) : DbContext(options)
     {
-        public DealsDbContext(DbContextOptions<DealsDbContext> options) : base(options)
-        {
-        }
-
         public DbSet<Deal> Deals { get; set; }
     }
 }

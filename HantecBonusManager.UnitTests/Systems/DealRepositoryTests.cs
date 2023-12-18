@@ -4,6 +4,8 @@ using HantecBonusManager.Services;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 
+namespace HantecBonusManager.UnitTests.Systems;
+
 public class DealRepositoryTests
 {
     [Fact]
@@ -46,30 +48,28 @@ public class DealRepositoryTests
             .UseInMemoryDatabase(databaseName: "TestDatabase")
             .Options;
 
-        using (var context = new DealsDbContext(options))
+        using var context = new DealsDbContext(options);
+        context.Database.EnsureDeleted();
+        var dealRepository = new DealRepository(context);
+
+        var dealsToAdd = new List<Deal>
         {
-            context.Database.EnsureDeleted();
-            var dealRepository = new DealRepository(context);
+            new() { AccountId = 1, Date = DateTime.Now, Amount = 100.0m },
+            new() { AccountId = 2, Date = DateTime.Now, Amount = 150.0m },
+            // Add more deals as needed
+        };
 
-            var dealsToAdd = new List<Deal>
-            {
-                new Deal { AccountId = 1, Date = DateTime.Now, Amount = 100.0m },
-                new Deal { AccountId = 2, Date = DateTime.Now, Amount = 150.0m },
-                // Add more deals as needed
-            };
+        // Act
+        dealRepository.AddDeals(dealsToAdd);
 
-            // Act
-            dealRepository.AddDeals(dealsToAdd);
+        // Assert
+        Assert.Equal(dealsToAdd.Count, context.Deals.Count());
 
-            // Assert
-            Assert.Equal(dealsToAdd.Count, context.Deals.Count());
-
-            foreach (var deal in dealsToAdd)
-            {
-                var addedDeal = context.Deals.Find(deal.Id);
-                Assert.NotNull(addedDeal);
-                Assert.Equal(deal.AccountId, addedDeal.AccountId);
-            }
+        foreach (var deal in dealsToAdd)
+        {
+            var addedDeal = context.Deals.Find(deal.Id);
+            Assert.NotNull(addedDeal);
+            Assert.Equal(deal.AccountId, addedDeal.AccountId);
         }
     }
 
