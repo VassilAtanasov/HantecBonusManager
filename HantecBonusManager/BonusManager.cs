@@ -2,6 +2,7 @@
 using HantecBonusManager.Services;
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
+using HantecBonusManager.Data;
 
 namespace HantecBonusManager
 {
@@ -9,12 +10,17 @@ namespace HantecBonusManager
     {
         private readonly ITradingPlatformApi _tradingPlatformApi;
         private readonly BonusCalculator _bonusCalculator;
+        private readonly IDealRepository _dealRepository;
         private readonly ILogger<BonusManager> _logger;
 
-        public BonusManager(ITradingPlatformApi tradingPlatformApi, IBonusCalculationStrategy bonusCalculationStrategy, ILogger<BonusManager> logger)
+        public BonusManager(ITradingPlatformApi tradingPlatformApi,
+            IBonusCalculationStrategy bonusCalculationStrategy,
+            IDealRepository dealRepository,
+            ILogger<BonusManager> logger)
         {
             _tradingPlatformApi = tradingPlatformApi ?? throw new ArgumentNullException(nameof(tradingPlatformApi));
             _bonusCalculator = new BonusCalculator(bonusCalculationStrategy ?? throw new ArgumentNullException(nameof(bonusCalculationStrategy)));
+            _dealRepository = dealRepository ?? throw new ArgumentNullException(nameof(dealRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
