@@ -34,7 +34,7 @@ namespace HantecBonusManager
                 {
                     try
                     {
-                        List<Deal> deals = await _tradingPlatformApi.GetHistoricalDeals(account.Id, DateTime.Now.AddMonths(-1), DateTime.Now);
+                        List<Deal> deals = _dealRepository.GetHistoricalDeals(account.Id, DateTime.Now.AddMonths(-1), DateTime.Now);
 
                         decimal totalBonus = CalculateTotalBonus(deals);
 
