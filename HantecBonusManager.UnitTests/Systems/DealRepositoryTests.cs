@@ -17,6 +17,7 @@ public class DealRepositoryTests
         using (var context = new DealsDbContext(options))
         {
             // Seed some test data into the in-memory database
+            context.Database.EnsureDeleted();
             context.Deals.Add(new Deal { AccountId = 1, Date = DateTime.Now, Amount = 100.0m });
             context.Deals.Add(new Deal { AccountId = 2, Date = DateTime.Now, Amount = 150.0m });
             context.SaveChanges();
@@ -47,6 +48,7 @@ public class DealRepositoryTests
 
         using (var context = new DealsDbContext(options))
         {
+            context.Database.EnsureDeleted();
             var dealRepository = new DealRepository(context);
 
             var dealsToAdd = new List<Deal>
