@@ -1,28 +1,19 @@
-﻿using HantecBonusManager.Models;
+﻿using HantecBonusManager.Data;
+using HantecBonusManager.Models;
 using HantecBonusManager.Services;
-using System.Diagnostics;
 using Microsoft.Extensions.Logging;
-using HantecBonusManager.Data;
 
 namespace HantecBonusManager
 {
-    public class BonusManager : IBonusManager
+    public class BonusManager(ITradingPlatformApi tradingPlatformApi,
+        IBonusCalculationStrategy bonusCalculationStrategy,
+        IDealRepository dealRepository,
+        ILogger<BonusManager> logger) : IBonusManager
     {
-        private readonly ITradingPlatformApi _tradingPlatformApi;
-        private readonly BonusCalculator _bonusCalculator;
-        private readonly IDealRepository _dealRepository;
-        private readonly ILogger<BonusManager> _logger;
-
-        public BonusManager(ITradingPlatformApi tradingPlatformApi,
-            IBonusCalculationStrategy bonusCalculationStrategy,
-            IDealRepository dealRepository,
-            ILogger<BonusManager> logger)
-        {
-            _tradingPlatformApi = tradingPlatformApi ?? throw new ArgumentNullException(nameof(tradingPlatformApi));
-            _bonusCalculator = new BonusCalculator(bonusCalculationStrategy ?? throw new ArgumentNullException(nameof(bonusCalculationStrategy)));
-            _dealRepository = dealRepository ?? throw new ArgumentNullException(nameof(dealRepository));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        }
+        private readonly ITradingPlatformApi _tradingPlatformApi = tradingPlatformApi ?? throw new ArgumentNullException(nameof(tradingPlatformApi));
+        private readonly BonusCalculator _bonusCalculator = new(bonusCalculationStrategy ?? throw new ArgumentNullException(nameof(bonusCalculationStrategy)));
+        private readonly IDealRepository _dealRepository = dealRepository ?? throw new ArgumentNullException(nameof(dealRepository));
+        private readonly ILogger<BonusManager> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         public async Task<List<ProcessResults>> ProcessBonusForAccounts()
         {
@@ -50,6 +41,21 @@ namespace HantecBonusManager
             }
 
             return results;
+        }
+
+        public async Task StoreHistoricalDealsInRepository(long accountId, DateTime fromDate, DateTime toDate)
+        {
+            try
+            {
+                List<Deal> deals = await _tradingPlatformApi.GetHistoricalDeals(accountId, fromDate, toDate);
+                _dealRepository.AddDeals(deals);
+
+                LogSuccess(accountId, deals.Count);
+            }
+            catch (Exception ex)
+            {
+                LogError(accountId, ex.Message);
+            }
         }
 
         private decimal CalculateTotalBonus(List<Deal> deals)
