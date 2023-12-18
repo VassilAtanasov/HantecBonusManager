@@ -19,3 +19,9 @@
  -  [x] Refactor using Strategy Design Pattern
  -  [x] Logging test and implementation
  -  [x] Implement batch processing using a local database
+
+The main entry point of the API is the BonusManager class 
+ -  ProcessBonusForAccounts()  
+https://github.com/VassilAtanasov/HantecBonusManager/blob/092f12a92d24688cbaeb30b321a0a29e97f7ce88/HantecBonusManager/BonusManager.cs#L18C11-L18C11
+ -  StoreHistoricalDealsInRepository()
+https://github.com/VassilAtanasov/HantecBonusManager/blob/092f12a92d24688cbaeb30b321a0a29e97f7ce88/HantecBonusManager/BonusManager.cs#L46C27-L46C59
